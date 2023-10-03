@@ -1,0 +1,22 @@
+li {
+    list-style: none;
+    cursor: pointer;
+}
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+}
+
+button {
+    background-color: #667eea;
+}
+
+button:hover {
+    background-color: #5a67d8;
+}
+
+/* li:hover {
+    color: rgba(213, 38, 38, 0.854);
+    border-bottom: 3px solid rgba(213, 38, 38, 0.854);
+} */
