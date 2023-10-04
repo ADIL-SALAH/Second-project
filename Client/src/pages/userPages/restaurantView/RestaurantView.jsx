@@ -56,7 +56,7 @@ function RestaurantView() {
 
     }
     return (
-        <>
+        <div className='bg-slate-800 h-full'>
             <div className='p-10 bg-red-800 w-screen h-screen   '>
 
                 <div className='flex justify-around mb-10 bg-opacity-20'>
@@ -96,7 +96,7 @@ function RestaurantView() {
                     <ChatComponent user={'user'} restoId={restoId} userId={objId} />
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

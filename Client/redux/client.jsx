@@ -7,6 +7,7 @@ const initialState = {
     state: null,
     objId: null,
     restoId: null,
+    wallet: 0,
     cart: [{ userId: '', item: '', qnty: '' }]
 }
 
@@ -19,6 +20,7 @@ const authSlice = createSlice({
             state.phone = action.payload.phone
             state.image = action.payload.image
             state.objId = action.payload.objId
+            state.wallet = action.payload.wallet
         },
         updateReduxCart: (state, action) => {
             state.cart = action.payload.cart
@@ -32,11 +34,14 @@ const authSlice = createSlice({
         updateClientRestoId: (state, action) => {
             state.restoId = action.payload.restoId
         },
+        updateClientWallet: (state, action) => {
+            state.wallet = action.payload.wallet
+        },
         clientLogout: (state, action) => {
             return initialState
-        }
+        },
     },
 })
 
-export const { clientLogin, updateReduxCart, clientLogout, updateClientState, updateClientPhoto, updateClientRestoId } = authSlice.actions
+export const { clientLogin, updateClientWallet, updateReduxCart, clientLogout, updateClientState, updateClientPhoto, updateClientRestoId } = authSlice.actions
 export default authSlice.reducer

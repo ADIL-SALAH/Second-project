@@ -41,10 +41,31 @@ function OrderMgt() {
             setReload(!reload)
         })
     }
+    const rejectOrder = (id) => {
+        console.log(id)
+        restoAxios.put('/rejectOrder', { orderId: id }).then((res) => {
+            console.log(res)
+            toast.success(res.data.message)
+            setReload(!reload)
+        }).catch((err) => {
+            console.log(err)
+            toast.error('Order Rejection failed')
+            setReload(!reload)
+        })
+    }
 
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = orderList.slice(indexOfFirstItem, indexOfLastItem);
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
 
     return (
-        <div className='w-full mt-32 flex justify-center pt-0 p-10'>
+        <div className='w-full mt-32 flex-col justify-center pt-0 p-10'>
             <ToastContainer />
             {state === null ?
                 <table className='text-white w-full border-red  border-separate'>
@@ -60,14 +81,24 @@ function OrderMgt() {
                         </tr>
                     </thead>
                     <tbody>
-                        {orderList.map((order, index) => {
+                        {currentItems.map((order, index) => {
                             return <tr className='text-center bg-gray-400 h-6' key={index}>
-                                <td className='p-5'>{index + 1}</td>
+                                <td className='p-5'>{indexOfFirstItem + index + 1}</td>
                                 <td className='hover:cursor-pointer hover:text-gray-800' onClick={() => orderDetailsfn(order._id)}>{order.orderId}</td>
                                 <td className='hover:cursor-pointer hover:text-gray-800'>{order.customer}</td>
                                 <td>{order.amount}</td>
                                 <td>{new Date(order.orderDate).toLocaleDateString()}</td>
-                                <td className={`${order.status === 'Confirmed' ? 'text-green-800' : 'text-red-600'}`}>{order.status === 'Pending' ? <button className='bg-green-600 px-2 text-white' onClick={() => acceptOrder(order.orderId)}>Accept</button> : order.status}</td>
+                                <td className={order.status === 'Confirmed' ? 'text-green-800' : 'text-red-600'}>
+                                    {order.status === 'Pending' ? (
+                                        <>
+                                            <button className='bg-green-600 m-1 px-2 text-white' onClick={() => acceptOrder(order.orderId)}>Accept</button>
+                                            <button className='bg-red-600 px-2 m-1 text-white' onClick={() => rejectOrder(order.orderId)}>Reject</button>
+                                        </>
+                                    ) : (
+                                        order.status
+                                    )}
+                                </td>
+
                                 <td>{order.paymentMode}</td>
                                 {/* <td className=''>
                                 <button className='bg-yellow-600 p-2 px-5 text-xs '>Edit</button>
@@ -78,8 +109,24 @@ function OrderMgt() {
 
                     </tbody>
                 </table>
+
                 : <OrderDetails orderDetails={orderDetails} />
             }
+            <div className='flex justify-center mt-4'>
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className='mr-2'
+                >
+                    Previous
+                </button>
+                <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={indexOfLastItem >= orderList.length}
+                >
+                    Next
+                </button>
+            </div>
         </div>)
 }
 

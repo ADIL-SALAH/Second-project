@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import restoAxios from '../../../../axios/restoAxios'
 import { ToastContainer, toast } from 'react-toastify'
-import userAxios from '../../../../axios/userAxios'
 
 function CategoryMgt() {
 
@@ -14,11 +13,22 @@ function CategoryMgt() {
     const { restoName, objId } = useSelector((state) => state.resto)
     const [categoryList, setCategoryList] = useState([])
     const [reload, setReload] = useState(true)
+    const [dishList, setdishList] = useState([])
+
     useEffect(() => {
         if (!Cookies.get('restoToken')) {
             navigate('/resto')
         } else {
             restoAxios.get(`/category?objId=${objId}`).then((res) => res.data.categories ? setCategoryList(res.data.categories) : console.log('dishes fetch failed'))
+                .catch((err) => console.log(err))
+
+            restoAxios.get(`/dishes`).then((res) => {
+                if (res.data.dishList) {
+                    setdishList(res.data.dishList)
+                } else {
+                    console.log('dishes fetch failed')
+                }
+            })
                 .catch((err) => console.log(err))
         }
     }, [reload])
@@ -35,12 +45,7 @@ function CategoryMgt() {
         description: ''
     })
     const [errors, setErrors] = useState({})
-    const handleInput = (event) => {
-        // const newObj = {
-        //     ...categoryDetails, [event.target.name]: event.target.value
-        // }
-        // setCategoryDetails(newObj)
-    }
+
     let flag = true
     const validation = () => {
         const newError = {}
@@ -130,16 +135,25 @@ function CategoryMgt() {
                             </thead>
                             <tbody>
                                 {categoryList.map((category, index) => {
-                                    return <tr className='text-center bg-gray-500 text-white' key={index}>
-                                        <td className='p-5'>{index + 1}</td>
-                                        <td>{category.categoryName}</td>
-                                        <td>{category.description}</td>
-                                        <td className=''>
-                                            <button className='bg-yellow-600 p-2 px-5 text-xs ' onClick={() => categoryEdit(category.categoryName, category.description, category._id)}>Edit</button>
-                                            <button className='bg-red-600 p-2 px-5 text-xs ' onClick={() => deleteCategory(category.categoryName)}>Delete</button>
-                                        </td>
-                                    </tr>
+                                    const hasDishes = dishList.some(dish => dish.category === category.categoryName);
+
+                                    return (
+                                        <tr className='text-center bg-gray-500 text-white' key={index}>
+                                            <td className='p-5'>{index + 1}</td>
+                                            <td>{category.categoryName}</td>
+                                            <td>{category.description}</td>
+                                            <td className=''>
+                                                <button className='bg-yellow-600 p-2 px-5 text-xs' onClick={() => categoryEdit(category.categoryName, category.description, category._id)}>Edit</button>
+                                                {hasDishes ? (
+                                                    null
+                                                ) : (
+                                                    <button className='bg-red-600 p-2 px-5 text-xs' onClick={() => deleteCategory(category.categoryName)}>Delete</button>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    );
                                 })}
+
 
                             </tbody>
                         </table>
@@ -148,11 +162,11 @@ function CategoryMgt() {
                         <form onSubmit={handleSubmit} className='p-5 border-4 border-gray-600 w-96 rounded-lg  top-24'>
                             <h2 className='text-gray-600 m-3 mb-4 flex justify-center font-mono font-bold'>{state === 'edit' ? 'Edit Category' : 'Add Category Here'}</h2>
                             <div className='mb-5'>
-                                <input type="text" onChange={handleInput} ref={categoryNameRef} name='categoryName' placeholder='Category Name' defaultValue={state === 'edit' ? editCategory.categoryName : ''} className='w-full h-8 rounded-full p-4 text-white bg-slate-600' />
+                                <input type="text" ref={categoryNameRef} name='categoryName' placeholder='Category Name' defaultValue={state === 'edit' ? editCategory.categoryName : ''} className='w-full h-8 rounded-full p-4 text-white bg-slate-600' />
                                 {errors.categoryName ? <small className='text-red-600'>{errors.categoryName}</small> : ''}
                             </div>
                             <div className='mb-5'>
-                                <input type="text" onChange={handleInput} ref={categoryDescRef} name='description' placeholder='Description' defaultValue={state === 'edit' ? editCategory.description : ''} className='w-full h-8 rounded-full p-4 text-white bg-slate-600' />
+                                <input type="text" ref={categoryDescRef} name='description' placeholder='Description' defaultValue={state === 'edit' ? editCategory.description : ''} className='w-full h-8 rounded-full p-4 text-white bg-slate-600' />
                                 {errors.description ? <small className='text-red-600'>{errors.description}</small> : ''}
                             </div>
                             <div className='flex justify-center mt-10 mb-5 h-8 bg-black rounded-lg'>

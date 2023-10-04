@@ -1,5 +1,5 @@
 const express = require('express')
-const { restoRegister, restoLogin, addCategory, categoryList, addMenu, forgotPassword, dishList, deleteCategory, deleteMenu, editMenu, getProfile, updateLogo, loadOrderMgt, editCategory, saveAddress, resetPassword, addPhotos, deletePhotos, getOrderDetails, getChatUsersList, getChatList, acceptOrder } = require('../controller/restoController')
+const { restoRegister, restoLogin, addCategory, categoryList, addMenu, forgotPassword, dishList, deleteCategory, deleteMenu, editMenu, getProfile, updateLogo, loadOrderMgt, editCategory, saveAddress, resetPassword, addPhotos, deletePhotos, getOrderDetails, getChatUsersList, getChatList, acceptOrder, rejectOrder } = require('../controller/restoController')
 const router = express.Router()
 const { validateToken } = require('../middlewares/Auth')
 const { isPermissionGranded } = require('../middlewares/isBlocked')
@@ -43,4 +43,5 @@ router.get('/orderDetails', validateToken, isPermissionGranded, getOrderDetails)
 router.get('/fetchChatUsersList', validateToken, isPermissionGranded, getChatUsersList)
 router.get('/chatList', validateToken, isPermissionGranded, getChatList)
 router.put('/acceptOrder', validateToken, isPermissionGranded, acceptOrder)
+router.put('/rejectOrder', validateToken, isPermissionGranded, rejectOrder)
 module.exports = router

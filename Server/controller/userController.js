@@ -79,7 +79,7 @@ const userLogin = async (req, res, next) => {
                     }
                     const token = jwt.sign(data, jwtSecretKey);
                     console.log(token, ';;;;;;;;;;;')
-                    res.json({ success: true, token, phone: isUser.phone, name: isUser.name, pic: isUser.proPic, objId: isUser._id })
+                    res.json({ success: true, token, phone: isUser.phone, name: isUser.name, pic: isUser.proPic, wallet: isUser.wallet, objId: isUser._id })
                 } else {
                     res.json({ success: false, error: 'User is Blocked by Admin' })
                 }
@@ -207,8 +207,9 @@ const orderDish = async (req, res, next) => {
                 return { ...obj, qnty: cartItem.qnty }
             }
         })
-        console.log(orderUpdate, '66666666666')
         const createdOrderId = orderid.generate()
+
+        console.log(orderUpdate, '66666666666')
         console.log(cart, cartDishDetails, 'orderid created')
         orderSchema.create({
             orderId: createdOrderId,
@@ -219,10 +220,18 @@ const orderDish = async (req, res, next) => {
             orderDate: Date.now(),
             paymentMode: paymentMode,
             deliveryMode: deliveryMode,
-            paymentStatus: paymentMode === 'Online' ? 'Recieved' : 'Pending'
+            paymentStatus: paymentMode === 'Online' || paymentMode === 'Wallet' ? 'Recieved' : 'Pending'
 
         })
-        res.json({ success: true, message: 'order is updated', orderId: createdOrderId })
+
+        if (paymentMode === 'Wallet') {
+            await userSchema.updateOne({ phone: phone }, { $inc: { wallet: -(cartTotal) } })
+            const userDetail = await userSchema.findOne({ phone: phone })
+            res.json({ success: true, message: 'order updated successfully', wallet: userDetail.wallet, orderId: createdOrderId })
+        } else {
+            res.json({ success: true, message: 'order updated successfully', orderId: createdOrderId })
+
+        }
     } catch (error) {
         res.status(500)
     }
@@ -374,7 +383,7 @@ const orderCancel = async (req, res) => {
         const orderUpdate = await orderSchema.updateOne({ _id: id }, { $set: { status: 'Cancelled' } })
         const orderDetails = await orderSchema.findOne({ _id: id })
         if (orderDetails.paymentStatus === 'Recieved') {
-            await userSchema.updateOne({ phone: phone }, { $set: { wallet: orderDetails.amount } })
+            await userSchema.updateOne({ phone: phone }, { $inc: { wallet: orderDetails.amount } })
             await orderSchema.updateOne({ _id: id }, { $set: { paymentStatus: 'Returned to wallet' } })
 
         } else {

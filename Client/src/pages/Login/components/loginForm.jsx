@@ -83,7 +83,7 @@ function Form() {
             userAxios.post('/login', data).then((res) => {
                 if (res.data.success) {
                     Cookies.set('token', res.data.token, { expires: 7 })
-                    dispatch(clientLogin({ name: res.data.name, phone: res.data.phone, image: res.data.pic, objId: res.data.objId, cart: [] }))
+                    dispatch(clientLogin({ name: res.data.name, phone: res.data.phone, image: res.data.pic, objId: res.data.objId, wallet: res.data.wallet, cart: [] }))
                     navigate('/')
                 }
                 else {

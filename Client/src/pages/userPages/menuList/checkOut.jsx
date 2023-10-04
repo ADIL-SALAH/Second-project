@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateClientState, updateReduxCart } from '../../../../redux/client'
+import { updateClientState, updateClientWallet, updateReduxCart } from '../../../../redux/client'
 import AddressForm from './addressForm'
 import { useLocation, useNavigate } from 'react-router-dom'
 import CryptoJS from 'crypto-js';
@@ -10,7 +10,7 @@ import { ToastContainer, toast } from 'react-toastify'
 
 function CheckOut() {
 
-    const { cart, phone, state } = useSelector(state => state.client)
+    const { cart, phone, state, wallet } = useSelector(state => state.client)
     console.log(cart, phone)
     const [reload, setReload] = useState(true)
 
@@ -67,9 +67,10 @@ function CheckOut() {
                                     .then((res) => {
                                         toast.success(res.data.message)
                                         setOrderId(res.data.orderId)
+                                        dispatch(updateClientWallet({ wallet: res.data.wallet }))
                                         dispatch(updateReduxCart({ cart: [] }))
                                         navigate(`/orderSuccess`)
-                                        setReload(!reload)
+                                        // setReload(!reload)
                                         setPayment('')
                                     }).catch((err) => {
                                         console.log(err)
@@ -98,6 +99,7 @@ function CheckOut() {
 
                 toast.success('Order placed Successfully')
                 setOrderId(res.data.orderId)
+                dispatch(updateClientWallet({ wallet: res.data.wallet }))
                 dispatch(updateReduxCart({ cart: [] }))
                 navigate(`/orderSuccess`)
                 setPayment('')
@@ -253,6 +255,14 @@ function CheckOut() {
 
                                             <span className="text-gray-400 text-sm">Rs:{decryptedCartTotal}</span>
                                         </button>
+                                        <button htmlFor='online' className="mt-6 flex items-center justify-between w-full bg-white rounded-md border p-4 focus:outline-none ">
+                                            <label className="flex items-center h-full hover:cursor-pointer w-full" >
+                                                <input type="radio" name='paymentMode' disabled={wallet < decryptedCartTotal} value='online' id='online' onClick={() => setPayment('Wallet')} className="form-radio h-5 w-5 text-blue-600" /><span className="ml-2 text-sm text-gray-700">Wallet</span>
+                                            </label>
+
+                                            {wallet < decryptedCartTotal ? <small className='text-red-600 text-xs w-full'>Insufficient balance in wallet</small> : null}
+                                            <span className="text-gray-400 text-sm">Rs:{decryptedCartTotal}</span>
+                                        </button>
                                         {console.log(payment, 'jjjjj')}
                                         {payment != null ? <h1 className='text-green-600 text-center'>{payment} payment selected</h1> : <h1 className='text-xs text-red-400 text-center'>Please select your payment mode</h1>}
                                     </div>
@@ -286,8 +296,8 @@ function CheckOut() {
                                     <svg className="h-5 w-5" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M7 16l-4-4m0 0l4-4m-4 4h18"></path></svg>
                                     <span className="mx-2">Back to Cart</span>
                                 </button>
-                                {payment === 'Cash' || payment === 'Online' ?
-                                    addressState === 'Home Address' || addressState === 'Work Address' || addressState === 'Other Address' ? < button
+                                {payment === 'Cash' || payment === 'Online' || payment === 'Wallet' ?
+                                    < button
                                         onClick={orderDish}
                                         className="flex items-center px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-500 focus:outline-none focus:bg-blue-500"
                                     >
@@ -295,7 +305,7 @@ function CheckOut() {
                                         <svg className="h-5 w-5 mx-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                                             <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                                         </svg>
-                                    </button> : null
+                                    </button>
                                     : payment}
 
 
@@ -304,6 +314,10 @@ function CheckOut() {
                         <div className="w-full mb-8 flex-shrink-0 order-1 lg:w-1/2 lg:mb-0 lg:order-2">
                             <div className="flex justify-center lg:justify-end">
                                 <div className="border rounded-md max-w-md w-full px-4 py-3">
+                                    <div className='flex justify-between mb-10 items-center'>
+                                        <span className="font-semibold text-lg uppercase text-center">{restoDetails?.resto_name} </span>
+                                        <img className='w-20 h-20' src={restoDetails?.logo} />
+                                    </div>
                                     <div className="flex items-center justify-between">
                                         <h3 className="text-gray-700 font-medium">Order items ({cart?.length})</h3>
                                         <span className="text-gray-600 text-sm">{deliveryMode} delivery</span>

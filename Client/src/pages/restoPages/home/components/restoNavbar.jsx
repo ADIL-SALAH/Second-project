@@ -23,7 +23,7 @@ function RestoNavbar() {
     const [active, setActive] = useState('reservation')
     const [isMenuVisible, setIsMenuVisible] = useState(true); // Initial state is true to show the menu
     const [isLoggedIn, setLoggedIn] = useState(!!Cookies.get('restoToken'))
-
+    const [state, setState] = useState('')
     const toggleMenuVisibility = () => {
         setIsMenuVisible(!isMenuVisible);
     };
@@ -137,51 +137,51 @@ function RestoNavbar() {
                 <div className='bg-slate-300 flex  p-1 rounded'>
                     <li className="mr-6">
                         {/* <!-- Home link --> */}
-                        <div className='hover:bg-white hover:text-black rounded px-2 text-sm'>
+                        <div className={`${state === 'home' ? 'bg-white text-black' : 'hover:bg-white hover:text-black text-black '} rounded px-2 text-sm`}>
                             <a
                                 className=""
-                                onClick={() => /*setState('home')*/handleTab('reservation')}
+                                onClick={() => { handleTab('reservation'), setState('home') }}
                                 data-te-nav-link-ref
                             >Home</a>
                         </div>
                     </li>
                     <li className="mr-6">
                         {/* <!-- Restaurants link -->  */}
-                        <div className='hover:bg-white rounded hover:text-black text-black px-2 text-sm'>
+                        <div className={`${state === 'category' ? 'bg-white text-black' : 'hover:bg-white hover:text-black text-black '} rounded px-2 text-sm`}>
                             <a
                                 className=""
                                 data-te-nav-link-ref
-                                onClick={() =>/*setState('resto')*/handleTab('category')}
+                                onClick={() => { handleTab('category'), setState('category') }}
                             >Category Mgt</a>
                         </div>
                     </li>
                     <li className="mr-6">
                         {/* <!-- Restaurants link -->  */}
-                        <div className='hover:bg-white rounded hover:text-black text-black px-2 text-sm'>
+                        <div className={`${state === 'menu' ? 'bg-white text-black' : 'hover:bg-white hover:text-black text-black '} rounded px-2 text-sm`}>
                             <a
                                 className=""
                                 data-te-nav-link-ref
-                                onClick={() =>/*setState('resto')*/handleTab('menu')}
+                                onClick={() => { { handleTab('menu'), setState('menu') } }}
                             >Menu Mgt</a>
                         </div>
                     </li>
                     <li className="mr-6">
                         {/* <!-- Restaurants link -->  */}
-                        <div className='hover:bg-white rounded hover:text-black text-black px-2 text-sm'>
+                        <div className={`${state === 'order' ? 'bg-white text-black' : 'hover:bg-white hover:text-black text-black '} rounded px-2 text-sm`}>
                             <a
                                 className=""
                                 data-te-nav-link-ref
-                                onClick={() =>/*setState('resto')*/handleTab('order')}
+                                onClick={() => { handleTab('order'), setState('order') }}
                             >Order Mgt</a>
                         </div>
                     </li>
                     <li >
                         {/* <!-- Restaurants link -->  */}
-                        <div className='hover:bg-white rounded hover:text-black text-black px-2 text-sm'>
+                        <div className={`${state === 'chat' ? 'bg-white text-black' : 'hover:bg-white hover:text-black text-black '} rounded px-2 text-sm`}>
                             <a
                                 className=""
                                 data-te-nav-link-ref
-                                onClick={() =>/*setState('resto')*/handleTab('chat')}
+                                onClick={() => { handleTab('chat'), setState('chat') }}
                             >Chat Room</a>
                         </div>
                     </li>

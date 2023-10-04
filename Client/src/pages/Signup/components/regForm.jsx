@@ -18,7 +18,7 @@ function RegForm() {
 
     const [showPassword, setShowPassword] = useState(false)
     const [otp, setOtp] = useState('')
-    const [state, setState] = useState('rt')
+    const [state, setState] = useState('')
     const [errors, setError] = useState({})
     const [minutes, setMinutes] = useState(0);
     const [seconds, setSeconds] = useState(30);

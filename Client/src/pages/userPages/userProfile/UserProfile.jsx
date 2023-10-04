@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import userAxios from '../../../../axios/userAxios'
-import { SimpleRegistrationForm } from './form'
 import { ToastContainer, toast } from 'react-toastify'
 import LoadingPage from '../../../loading'
 import { useNavigate } from 'react-router-dom'
-import MyOrders from './MyOrders'
 import { useDispatch } from 'react-redux'
-import { clientLogin, updateClientPhoto } from '../../../../redux/client'
+import { updateClientPhoto } from '../../../../redux/client'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWallet } from '@fortawesome/free-solid-svg-icons';
 
 function UserProfile() {
     const [userDetails, setUserDetails] = useState([])
@@ -87,7 +87,8 @@ function UserProfile() {
                             <p className="pt-2 text-gray-600 text-xs lg:text-sm flex items-center justify-center lg:justify-start">
                                 <svg className="h-4 fill-current text-green-700 pr-4" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" /></svg>Your Location - longitude:{userLocation?.longitude?.toFixed(2)}, latitude:{userLocation?.latitude?.toFixed(2)}</p>
                             <div className="pt-12 pb-8">
-
+                                <FontAwesomeIcon icon={faWallet} className='mx-3' />
+                                <span>Rs: {userDetails[0]?.wallet}</span>
                             </div>
 
                             <div className="mt-6 pb-16 lg:pb-0 w-4/5 lg:w-full mx-auto flex flex-wrap items-center justify-between">

@@ -10,7 +10,7 @@ const fs = require('fs')
 const path = require('path')
 const order = require('../model/orderModel')
 const chatSchema = require('../model/chatModel')
-
+const userSchema = require('../model/userModel')
 
 const restoRegister = async (req, res, next) => {
     try {
@@ -238,13 +238,18 @@ const editMenu = async (req, res, next) => {
         const { id, dishName, dishCategory, dishPrice, description } = req.body
         const phone = req.user.phone
         let images = req.files.map(file => file.path)
-        const uploadPromises = images.map(image => {
-            return uploader.uploader.upload(image, {
-                folder: 'images',
+        console.log(images, '2222222222222')
+        if (images.length != 0) {
+            const uploadPromises = images.map(image => {
+                return uploader.uploader.upload(image, {
+                    folder: 'images',
+                });
             });
-        });
-        const uploadedResults = await Promise.all(uploadPromises);
-        const imgUrls = uploadedResults.map(result => result.secure_url)
+            const uploadedResults = await Promise.all(uploadPromises);
+            const imgUrls = uploadedResults.map(result => result.secure_url)
+            await restoSchema.updateOne(
+                { phone: phone, 'dishes._id': id }, { $set: { 'dishes.$.images': imgUrls } })
+        }
 
         await restoSchema.updateOne(
             { phone: phone, 'dishes._id': id }, // Use 'dishes._id' to match the _id of the dish
@@ -253,7 +258,6 @@ const editMenu = async (req, res, next) => {
                     'dishes.$.dishName': dishName.toUpperCase(), // Use 'dishes.$.dishName' to update the specific field
                     'dishes.$.category': dishCategory,
                     'dishes.$.price': dishPrice,
-                    'dishes.$.images': imgUrls,
                     'dishes.$.description': description
                 }
             }
@@ -441,6 +445,30 @@ const acceptOrder = async (req, res) => {
     }
 }
 
+const rejectOrder = async (req, res) => {
+    try {
+        const orderId = req.body.orderId
+        await orderSchema.updateOne({ orderId: orderId }, { $set: { status: 'Rejected' } })
+        const orderDetails = await orderSchema.findOne({ orderId: orderId })
+        console.log(orderDetails)
+        if (orderDetails.paymentStatus === 'Recieved') {
+            const customer = orderDetails.customer
+            const amount = orderDetails.amount
+            await userSchema.updateOne({ phone: customer }, { $inc: { wallet: amount } })
+            await orderSchema.updateOne({ orderId: orderId }, { $set: { paymentStatus: `Returned to customer wallet` } })
+            res.json({ success: true, message: 'Order Rejected, Amount Returned to Customer Wallet' })
+        } else {
+            res.json({ success: true, message: 'Order Rejected' })
+
+        }
+
+    } catch (error) {
+        console.log(error)
+        res.status(500)
+    }
+}
+
+
 
 
 module.exports = {
@@ -466,6 +494,7 @@ module.exports = {
     getChatUsersList,
     getChatList,
     getNewOrder,
-    acceptOrder
+    acceptOrder,
+    rejectOrder
 
 }
