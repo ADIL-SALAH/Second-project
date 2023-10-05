@@ -1,11 +1,8 @@
-import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import userAxios from '../../../../axios/userAxios'
 import { ToastContainer, toast } from 'react-toastify'
-import { AiFillHeart } from "react-icons/ai";
-import { BsChatSquareFill } from "react-icons/bs"
-import img from '../../../assets/sign_resto.png'
+
 import { useDispatch, useSelector } from 'react-redux'
 import { updateClientRestoId, updateClientState } from '../../../../redux/client'
 import { FaThumbsUp } from 'react-icons/fa';
@@ -56,11 +53,11 @@ function RestaurantList() {
     const likeees = restoList.filter((resto) => resto.likes.find((obj) => obj.userPhone == phone))
     return (
 
-        <div className='bg-red-800 pt-10'>
-            <div className='bg-red-800'>
+        <div className='bg-slate-900 pt-10 h-full'>
+            <div className='bg-slate-900'>
                 <h1 className='text-center text-white font-semibold text-3xl'>Restaurant List</h1>
             </div>
-            <div className='w-screen h-screen grid grid-cols-4 mt-20'>
+            <div className='w-screen h-full grid grid-cols-4 mt-20 '>
                 {restoList.map((resto, index) => {
                     return (
                         <div className="bg-white bg-opacity-20 h-96 md:col-span-1 col-span-4 hover:text-white shadow-2xl hover:shadow-none cursor-pointer  rounded-3xl flex flex-col items-center justify-center transition-all duration-500 ease-in-out m-10" >
@@ -77,7 +74,6 @@ function RestaurantList() {
                                                 : 'bg-slate-400  text-red-600'
                                             }`}
                                     >
-                                        {/* <AiFillHeart /> */}
                                         <FaThumbsUp />
                                         <span className={`${resto.likes.some((user) => user.userPhone == phone) ? 'text-white text-xs ml-2' : "text-black ml-2  text-xs"}`}>{resto.likesCount}</span>
                                     </div>
@@ -95,6 +91,7 @@ function RestaurantList() {
                     )
                 })}
             </div >
+            <ToastContainer />
         </div>
     )
 }

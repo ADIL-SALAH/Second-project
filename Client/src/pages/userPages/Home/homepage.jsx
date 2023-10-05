@@ -1,15 +1,11 @@
 import React, { useEffect, useState, } from 'react'
 import { useNavigate } from 'react-router-dom'
 import userAxios from '../../../../axios/userAxios'
-import Cookies from 'js-cookie'
-import { useSelector } from 'react-redux'
 import {
     Input,
     initTE, PerfectScrollbar
 } from "tw-elements";
-// import { io } from 'socket.io-client';
-
-// const socket = io('http://localhost:5173');
+import './homePage.css'
 
 
 function homepage() {
@@ -42,19 +38,19 @@ function homepage() {
 
     }
     return (
-        <div className='  '>
-            <div className='flex md:flex-row flex-col  items-center '>
-                {/* <img src="https://res.cloudinary.com/dsvassz8z/image/upload/v1694418918/images/xv6p99thvoe5vm8sekev.webp" alt="" className='w-2/5' /> */}
-                <div className='bg-red-800 shadow-2xl p-20 h-screen md:w-1/2 w-full text-white  md:flex md:flex-row md:items-center flex-col space-y-20'>
-                    <h1 className='text-5xl font-serif '>
+        <div className='bg-slate-800 h-full'>
+            <div className='flex md:flex-row flex-col bg-slate-900 items-center ' >
+                <div className='bg-red-800 shadow-2xl p-20 h-screen md:w-1/2 w-full text-white md:flex md:flex-row md:items-center flex-col space-y-20 bg-cover' style={{ backgroundImage: 'url("https://cdn.pixabay.com/photo/2021/01/22/19/48/chicken-5940975_1280.jpg")', opacity: 0.5 }}>
+                    <h1 className='text-5xl font-serif animate-moveText' style={{ animation: 'moveText 5s linear infinite' }}>
                         Find the restaurant,
                         <br />the best for you
                     </h1>
+
                     <div className='md:w-1/2 w-full h-screen block md:hidden'>
                         <div class="relative mb-3" data-te-input-wrapper-init>
                             <input
                                 type="text"
-                                class="peer block min-h-[auto] w-full rounded border-0 bg-slate-700 px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                                class="peer block min-h-[auto] w-full rounded border-0 bg-slate-100 px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                                 id="exampleFormControlInput1"
                                 placeholder="Example label"
                                 onChange={handleSearch}
@@ -69,11 +65,11 @@ function homepage() {
                             {search ?
                                 <div className='h-36 w-96 overflow-y-auto  scrollbar-thin scroll-smooth scrollbar-thumb-gray-100 scrollbar-track-white' >
                                     {searchResults?.map((resto, index) =>
-                                        <div className='flex justify-between p-5 text-xs cursor-pointer' onClick={() => viewResto(resto._id)}>
-                                            <p>{resto.resto_name}</p>
+                                        <div className='flex justify-between  p-5 text-xs cursor-pointer' onClick={() => viewResto(resto._id)}>
+                                            <p className='text-white'>{resto.resto_name}</p>
                                             <div className=''>
-                                                <small className=' text-gray-500 mr-2 '>{resto.address.place}</small>
-                                                <small className=' text-gray-500'>{resto.address.district}</small>
+                                                <small className=' text-gray-100 mr-2 '>{resto.address.place}</small>
+                                                <small className=' text-gray-100'>{resto.address.district}</small>
                                             </div>
                                         </div>
                                     )}
@@ -106,11 +102,11 @@ function homepage() {
                         {search ?
                             <div className='h-36 w-96 overflow-y-auto  scrollbar-thin scroll-smooth scrollbar-thumb-gray-100 scrollbar-track-white' >
                                 {searchResults?.map((resto, index) =>
-                                    <div className='flex justify-between p-5 text-xs cursor-pointer' onClick={() => viewResto(resto._id)}>
+                                    <div className='flex justify-between text-white p-5 text-xs cursor-pointer' onClick={() => viewResto(resto._id)}>
                                         <p>{resto.resto_name}</p>
                                         <div className=''>
-                                            <small className=' text-gray-500 mr-2 '>{resto.address.place}</small>
-                                            <small className=' text-gray-500'>{resto.address.district}</small>
+                                            <small className=' text-gray-200 mr-2 '>{resto.address.place}</small>
+                                            <small className=' text-gray-200'>{resto.address.district}</small>
                                         </div>
                                     </div>
                                 )}

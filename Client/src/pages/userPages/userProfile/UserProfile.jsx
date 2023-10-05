@@ -39,7 +39,6 @@ function UserProfile() {
     }, [reload])
 
     const saveImage = (event) => {
-        // const photo = event.target.files
         setIsLoading(true)
         const formData = new FormData()
         formData.append('file', event.target.files[0])
@@ -71,14 +70,15 @@ function UserProfile() {
 
 
                         <div className="p-2 md:p-8 text-center lg:text-left">
-                            {userDetails[0]?.proPic ? <div className="block lg:hidden rounded-full shadow-xl mx-auto -mt-16 h-48 w-48 bg-cover bg-center" style={{
-                                backgroundImage: `url(${userDetails[0]?.proPic})`
-                            }}></div> : <div className="block lg:hidden rounded-full shadow-xl mx-auto -mt-16 h-48 w-48 bg-cover bg-center bg-slate-300" >
-                                <div className='flex flex-col justify-center w-full h-full cursor-pointer '>
-                                    <input type="file" id='sm-file-input' className='hidden ' />
-                                    <label htmlFor="sm-file-input">add photo</label>
-                                </div>
-                            </div>}
+                            {userDetails && userDetails[0] && userDetails[0].proPic ?
+                                <div className="block lg:hidden rounded-full shadow-xl mx-auto -mt-16 h-48 w-48 bg-cover bg-center" style={{
+                                    backgroundImage: `url(${userDetails[0]?.proPic})`
+                                }}></div> : <div className="block lg:hidden rounded-full shadow-xl mx-auto -mt-16 h-48 w-48 bg-cover bg-center bg-slate-300" >
+                                    <div className='flex flex-col justify-center w-full h-full cursor-pointer '>
+                                        <input type="file" id='sm-file-input' className='hidden ' />
+                                        <label htmlFor="sm-file-input">add photo</label>
+                                    </div>
+                                </div>}
 
                             <h1 className="text-3xl font-bold pt-8 lg:pt-0">{userDetails[0]?.name}</h1>
                             <div className="mx-auto lg:mx-0 w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
@@ -93,7 +93,6 @@ function UserProfile() {
 
                             <div className="mt-6 pb-16 lg:pb-0 w-4/5 lg:w-full mx-auto flex flex-wrap items-center justify-between">
                                 <button className='bg-green-800 text-white rounded-full text-xs px-3 shadow-sm py-2' onClick={() => navigate('/myOrders')}>My Orders</button>
-                                {/* <button className='bg-green-800 text-white rounded-full text-xs px-3 shadow-sm py-2' >Change Password</button> */}
                                 <button className={`${showPhoto ? 'bg-green-800' : ' bg-red-800'} text-white rounded-full text-xs px-3 shadow-sm py-2`} onClick={() => setShowPhoto(!showPhoto)}>Edit Photo</button>
                                 <button className={`${edit ? 'bg-red-400' : 'bg-green-800 '}text-white rounded-full text-xs px-3 shadow-sm py-2`} onClick={() => setEdit(!edit)}>{edit}Edit Profile</button>
                             </div>

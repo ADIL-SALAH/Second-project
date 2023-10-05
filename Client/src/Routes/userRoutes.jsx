@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
-// import Login from '../pages/login/login'
-// import Signup from '../pages/signup/signup'
 import Homepage from '../pages/userPages/Home/homepage'
 import SignupAndLogin from '../pages/userPages/signup and login/signupAndLogin'
 import Navbar from '../pages/userPages/Home/components/navbar'
@@ -18,7 +16,13 @@ import OrderSuccess from '../pages/userPages/menuList/OrderSuccess'
 function User() {
     const location = useLocation()
     return (
-        <div>
+        <div className={
+            location.pathname === '/' || location.pathname === '/restos'
+                ? 'bg-slate-900'
+                : location.pathname === '/cart' || location.pathname === '/checkOut'
+                    ? ''
+                    : 'bg-red-800'
+        }>
             {location.pathname != '/login' && location.pathname != '/signup' ? <Navbar /> : ''}
             <Routes>
                 < Route path='/login' element={< SignupAndLogin login />} />
